@@ -1,0 +1,145 @@
+NAME
+    Mandel - Async model layer for MongoDB objects using Mango
+
+SYNOPSIS
+      package MyModel;
+      use Mandel;
+
+      package MyModel::Person;
+      use Mandel::Document;
+      field [qw( name age )];
+      has_many cats => 'MyModel::Cat';
+      has_one favorite_cat => 'MyModel::Cat';
+
+      package main;
+      my $connection = MyModel->new(uri => "mongodb://localhost/my_db");
+      my $persons = $connection->collection('person');
+
+      my $p1 = $persons->create({ name => 'Bruce', age => 30 });
+      $p1->save(sub {
+        my($p1, $err) = @_;
+      });
+
+      $persons->count(sub {
+        my($persons, $n_persons) = @_;
+      });
+
+      $persons->all(sub {
+        my($persons, $err, $objs) = @_;
+        for my $p (@$objs) {
+          $p->age(25)->save(sub {});
+        }
+      });
+
+      $persons->search({ name => 'Bruce' })->single(sub {
+        my($persons, $err, $person) = @_;
+
+        $person->cats(sub {
+          my($person, $err, $cats) = @_;
+          $_->remove(sub {}) for @$cats;
+        });
+
+        $person->remove(sub {
+          my($person, $err) = @_;
+        });
+      });
+
+DESCRIPTION
+    THIS IS ALPHA SOFTWARE! THE API MAY BE CHANGED AT ANY TIME! PLEASE
+    CONTACT ME IF YOU HAVE ANY COMMENTS OR FEEDBACK.
+
+    Mandel is an async object-document-mapper. It allows you to work with
+    your MongoDB documents in Perl as objects.
+
+    This class binds it all together:
+
+    *   Mandel::Model
+
+        An object modelling a document.
+
+    *   Mandel::Collection
+
+        A collection of Mandel documents.
+
+    *   Mandel::Document
+
+        A single MongoDB document with logic.
+
+ATTRIBUTES
+    Mandel inherits all attributes from Mojo::Base and implements the
+    following new ones.
+
+  mango
+    An instance of Mango which acts as the database connection. If not
+    provided, one will be lazily created using the "uri" attribute.
+
+  namespaces
+    The namespaces which will be searched when looking for Types. By
+    default, the (sub)class name of this module.
+
+  uri
+    The uri used by Mango to connect to the MongoDB server.
+
+    IMPORTANT! It requires the database to be part of the URI. Example:
+
+      mongodb://localhost/my_database_name
+
+METHODS
+    Mandel inherits all methods from Mojo::Base and implements the following
+    new ones.
+
+  initialize
+      $self->initialize(@names);
+      $self->initialize;
+
+    Takes a list of document names. Calls the "initialize" in
+    Mango::Document method on any document given as input. @names default to
+    "all_document_names" unless specified.
+
+  all_document_names
+      @names = $self->all_document_names;
+
+    Returns a list of all the documents in the "namespaces".
+
+  class_for
+      $document_class = $self->class_for($name);
+
+    Given a document name, find the related class name, ensure that it is
+    loaded (or else die) and return it.
+
+  collection
+      $collection_obj = $self->collection($name);
+
+    Returns a Mango::Collection object.
+
+  model
+      $model = $self->model($name);
+      $self = $self->model($name => \%model_args);
+      $self = $self->model($name => $model_obj);
+
+    Define or returns a Mandel::Model object. Will die unless a model is
+    registered by that name or "class_for" returns a class which has the
+    "model()" method defined.
+
+  import
+    See "SYNOPSIS".
+
+SEE ALSO
+    Mojolicious, Mango
+
+SOURCE REPOSITORY
+    <http://github.com/jhthorsen/mandel>
+
+AUTHOR
+    Jan Henning Thorsen - "jhthorsen@cpan.org"
+
+    This project is a fork of MangoModel
+    <http://github.com/jberger/MangoModel>, created by Joel Berger,
+    <joel.a.berger@gmail.com>
+
+COPYRIGHT AND LICENSE
+    Copyright (C) 2013 by Jan Henning Thorsen
+
+    This library is free software; you can redistribute it and/or modify it
+    under the same terms as Perl itself.
+
