@@ -6,8 +6,8 @@ Mandel::Collection - A collection of Mandel documents
 
 =head1 SYNOPSIS
 
-  my $connection = MyModel->new(uri => ...);
-  my $persons = $connection->collection('person');
+  my $connection = MyModel->connect("mongodb://localhost/my_db");
+  my $persons = $connection->collection("person");
 
   $persons->count(sub {
     my($persons, $err, $int) = @_;
@@ -23,6 +23,7 @@ This class is used to describe a group of mongodb documents.
 
 use Mojo::Base -base;
 use Mandel::Iterator;
+use Mango::BSON ':bson';
 use Scalar::Util 'blessed';
 use Carp 'confess';
 
@@ -43,7 +44,7 @@ has model => sub { confess "model required in constructor" };
 
 has _collection => sub {
   my $self = shift;
-  $self->connection->_mango_collection($self->model->collection);
+  $self->connection->_collection($self->model->collection);
 };
 
 =head1 METHODS
@@ -153,6 +154,27 @@ sub remove {
   my $self = shift;
 
   $self->_collection->remove(@_, $cb);
+  $self;
+}
+
+=head2 save
+
+  $self = $self->save(\%document, sub { my($self, $err, $obj) = @_; );
+
+Used to save a document. The callback receives a L<Mandel::Document>.
+
+=cut
+
+sub save {
+  my($self, $raw, $cb) = @_;
+
+  $raw->{_id} ||= bson_oid;
+
+  $self->_collection->save($raw, sub {
+    my($collection, $err, $doc) = @_;
+    $self->$cb($err, $self->_new_document($raw, 1));
+  });
+
   $self;
 }
 

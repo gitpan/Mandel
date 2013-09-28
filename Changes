@@ -1,5 +1,15 @@
 Revision history for Mandel
 
+0.02     Sat Sep 28 12:02:38 2013
+       * Add Mandel::Collection::save()
+       * Add Mandel::Document::contains()
+       * Add Mandel::connect(), remove ::uri()
+       * Add Mandel::model_class()
+       * Add Mandel::storage(), remove ::mango()
+       * Add builders for attributes, which makes it easier to customize in
+         subclass.
+       * Add support for custom base class for documents
+
 0.01     Fri Sep 27 18:55:40 2013
        * Released alpha software
        * Add document model
