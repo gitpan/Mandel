@@ -12,11 +12,12 @@ sub mandel {
   my $cat = $connection->model(cat => {})->model('cat');
 
   $person->add_relationship(has_many => cats => $cat->document_class);
-  $person->add_relationship(has_many => '/family/siblings' => $person->document_class);
   $person->add_relationship(has_one => father => $person->document_class);
-  $person->add_relationship(has_one => '/favorite/cat' => $cat->document_class);
   $person->add_field([qw/ age name /]);
+
+  $cat->add_relationship(belongs_to => person => $person->document_class);
   $cat->add_field([qw/ type name /]);
+
   $connection;
 }
 

@@ -1,8 +1,8 @@
-package Mandel::Relationship::HasOne;
+package Mandel::Relationship::BelongsTo;
 
 =head1 NAME
 
-Mandel::Relationship::HasOne - A field relates to another mongodb document
+Mandel::Relationship::BelongsTo - A document is owned by another mongodb document
 
 =head1 DESCRIPTION
 
@@ -10,7 +10,7 @@ Example:
 
   MyModel::Cat
     ->description
-    ->add_relationship(has_one => owners => 'MyModel::Person');
+    ->add_relationship(belongs_to => owner => 'MyModel::Person');
 
 Will add:
 
@@ -51,7 +51,7 @@ sub _other_object {
     my $self = shift;
     my $obj = shift;
     my $other_collection = $class->_load_class($other)->model->new_collection($self->connection);
-    my $foreign = $class->_foreign_key($self);
+    my $foreign = $class->_foreign_key($other);
 
     if($obj) { # set ===========================================================
       if(ref $obj eq 'HASH') {
@@ -61,12 +61,8 @@ sub _other_object {
       Mojo::IOLoop->delay(
         sub {
           my($delay) = @_;
-          $other_collection->search({ $foreign => $self->id })->remove($delay->begin);
-        },
-        sub {
-          my($delay, @err) = @_;
-          $self->save($delay->begin) unless $self->in_storage;
-          $obj->set("/$foreign", $self->id)->save($delay->begin);
+          $obj->save($delay->begin) unless $obj->in_storage;
+          $self->set("/$foreign", $obj->id)->save($delay->begin);
         },
         sub {
           my($delay, @err) = @_;

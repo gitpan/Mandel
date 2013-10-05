@@ -12,6 +12,7 @@ Mandel - Async model layer for MongoDB objects using Mango
   package MyModel::Cat;
   use Mandel::Document;
   field [qw( name type )];
+  belongs_to person => 'MyModel::Person';
 
   package MyModel::Person;
   use Mandel::Document;
@@ -88,7 +89,7 @@ use Mandel::Model;
 use Mango;
 use Carp 'confess';
 
-our $VERSION = '0.04';
+our $VERSION = '0.05';
 
 my $LOADER = Mojo::Loader->new;
 
