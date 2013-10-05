@@ -33,7 +33,8 @@
       "runtime" : {
          "requires" : {
             "Mango" : "0.12",
-            "Mojolicious" : "3.40"
+            "Mojolicious" : "3.40",
+            "Type::Tiny" : "0.014"
          }
       }
    },
@@ -50,5 +51,5 @@
          "url" : "https://github.com/jhthorsen/mandel"
       }
    },
-   "version" : "0.05"
+   "version" : "0.06"
 }

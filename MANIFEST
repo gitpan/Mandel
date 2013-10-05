@@ -1,4 +1,5 @@
 Changes
+lib/andel.pm
 lib/Mandel.pm
 lib/Mandel/Collection.pm
 lib/Mandel/Document.pm
@@ -34,5 +35,6 @@ t/relationship-has-many.t
 t/relationship-has-one-online.t
 t/relationship-has-one.t
 t/synopsis.t
+t/types.t
 META.yml                                 Module YAML meta-data (added by MakeMaker)
 META.json                                Module JSON meta-data (added by MakeMaker)

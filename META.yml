@@ -20,9 +20,10 @@ no_index:
 requires:
   Mango: 0.12
   Mojolicious: 3.40
+  Type::Tiny: 0.014
 resources:
   bugtracker: http://rt.cpan.org/NoAuth/Bugs.html?Dist=Mandel
   homepage: https://metacpan.org/release/Mandel
   license: http://dev.perl.org/licenses/
   repository: https://github.com/jhthorsen/mandel
-version: 0.05
+version: 0.06

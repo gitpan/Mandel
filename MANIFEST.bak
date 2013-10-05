@@ -5,10 +5,12 @@ lib/Mandel/Document.pm
 lib/Mandel/Iterator.pm
 lib/Mandel/Model.pm
 lib/Mandel/Relationship.pm
+lib/Mandel/Relationship/BelongsTo.pm
 lib/Mandel/Relationship/HasMany.pm
 lib/Mandel/Relationship/HasOne.pm
 Makefile.PL
 MANIFEST			This list of files
+MANIFEST.bak
 MANIFEST.SKIP
 README
 README.pod
@@ -26,6 +28,7 @@ t/lib/MyModel.pm
 t/lib/MyModel/Menu.pm
 t/mandel.t
 t/Online.pm
+t/relationship-belongs-to-online.t
 t/relationship-has-many-online.t
 t/relationship-has-many.t
 t/relationship-has-one-online.t
