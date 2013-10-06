@@ -43,6 +43,7 @@ use Mandel::Model;
 use Mango::BSON::ObjectID;
 use Scalar::Util 'looks_like_number';
 use Carp 'confess';
+use constant DEBUG => $ENV{MANDEL_CURSOR_DEBUG} ? eval 'require Data::Dumper;1' : 0;
 
 my $POINTER = Mojo::JSON::Pointer->new;
 
@@ -66,7 +67,7 @@ This can field can also be set.
 
 sub id {
   my $self = shift;
-  my $raw = $self->_raw;
+  my $raw = $self->data;
 
   if(@_) {
     $self->dirty->{_id} = 1;
@@ -81,6 +82,10 @@ sub id {
     return $raw->{_id} = Mango::BSON::ObjectID->new;
   }
 }
+
+=head2 data
+
+Holds the raw mongodb document.
 
 =head2 in_storage
 
@@ -116,7 +121,7 @@ has _collection => sub {
   $self->connection->_storage_collection($self->model->collection_name);
 };
 
-has _raw => sub { +{} }; # raw mongodb document data
+has data => sub { +{} }; # raw mongodb document data
 
 =head1 METHODS
 
@@ -137,11 +142,11 @@ sub new {
 
 =head2 initialize
 
-A no-op placeholder useful for initialization (see L<Mandel/initialize>)
+A no-op placeholder useful for initialization. See L<Mandel/initialize>.
 
 =cut
 
-sub initialize {}
+sub initialize { shift }
 
 =head2 contains
 
@@ -154,7 +159,7 @@ mongodb document.
 
 sub contains {
   my $self = shift;
-  $POINTER->contains($self->_raw, @_);
+  $POINTER->contains($self->data, @_);
 }
 
 =head2 get
@@ -168,7 +173,7 @@ document.
 
 sub get {
   my $self = shift;
-  $POINTER->get($self->_raw, @_);
+  $POINTER->get($self->data, @_);
 }
 
 =head2 is_changed
@@ -198,10 +203,12 @@ sub remove {
 
   ($delay, $cb) = $self->_blocking unless $cb;
 
+  warn "[$self\::remove] @{[$self->id]}\n" if DEBUG;
+
   $self->_collection->remove({ _id => $self->id }, { single => 1 }, sub {
     my($collection, $err, $doc);
     unless($err) {
-      $self->dirty->{$_} = 1 for keys %{ $self->_raw };
+      $self->dirty->{$_} = 1 for keys %{ $self->data };
       $self->in_storage(0);
     }
     $self->$cb($err);
@@ -237,7 +244,8 @@ sub save {
 
   $self->id; # make sure we have an ObjectID
 
-  $self->_collection->save($self->_raw, sub {
+  warn "[$self\::save] ", Data::Dumper->new([$self->data])->Indent(1)->Sortkeys(1)->Terse(1)->Maxdepth(3)->Dump if DEBUG;
+  $self->_collection->save($self->data, sub {
     my($collection, $err, $doc);
     unless($err) {
       delete $self->{dirty};
@@ -261,7 +269,7 @@ die if the pointer points to non-compatible data.
 
 sub set {
   my($self, $pointer, $val) = @_;
-  my $raw = $self->_raw;
+  my $raw = $self->data;
   my(@path, $field);
 
   return $self unless $pointer =~ s!^/!!;
@@ -323,10 +331,10 @@ sub import {
     $model->collection_name($args{collection_name});
   }
 
-  monkey_patch $caller, belongs_to => sub { $model->add_relationship(belongs_to => @_) };
-  monkey_patch $caller, field => sub { $model->add_field(@_) };
-  monkey_patch $caller, has_many => sub { $model->add_relationship(has_many => @_) };
-  monkey_patch $caller, has_one => sub { $model->add_relationship(has_one => @_) };
+  monkey_patch $caller, belongs_to => sub { $model->relationship(belongs_to => @_)->monkey_patch };
+  monkey_patch $caller, field => sub { $model->field(@_) };
+  monkey_patch $caller, has_many => sub { $model->relationship(has_many => @_)->monkey_patch };
+  monkey_patch $caller, has_one => sub { $model->relationship(has_one => @_)->monkey_patch };
   monkey_patch $caller, model => sub { $model };
 
   @_ = ($class, $base_class);

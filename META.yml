@@ -18,7 +18,7 @@ no_index:
     - t
     - inc
 requires:
-  Mango: 0.12
+  Mango: 0.14
   Mojolicious: 3.40
   Type::Tiny: 0.014
 resources:
@@ -26,4 +26,4 @@ resources:
   homepage: https://metacpan.org/release/Mandel
   license: http://dev.perl.org/licenses/
   repository: https://github.com/jhthorsen/mandel
-version: 0.06
+version: 0.07

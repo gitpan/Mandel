@@ -71,16 +71,16 @@ has name => '';
 
 =head1 METHODS
 
-=head2 add_field
+=head2 field
 
-  $self = $self->add_field('name', %args);
-  $self = $self->add_field(['name1', 'name2'], %args);
+  $self = $self->field('name', %args);
+  $self = $self->field(['name1', 'name2'], %args);
 
 Used to define new field(s) to the document.
 
 =cut
 
-sub add_field {
+sub field {
   my($self, $fields, %args) = @_;
   my $class = $self->document_class;
 
@@ -88,7 +88,7 @@ sub add_field {
   for my $field (@{ ref $fields eq 'ARRAY' ? $fields : [$fields] }) {
     my $code = "";
 
-    $code .= "package $class;\nsub $field {\n my \$raw = \$_[0]->_raw;\n";
+    $code .= "package $class;\nsub $field {\n my \$raw = \$_[0]->data;\n";
     $code .= "return \$raw->{'$field'} if \@_ == 1;\n";
     $code .= "local \$_ = \$_[1];\n";
     $code .= $self->_field_type($args{isa}) if $args{isa};
@@ -121,27 +121,38 @@ sub _field_type {
   return $code;
 }
 
-=head2 add_relationship
+=head2 relationship
 
-  $self = $self->add_relationship(
-            $type => $field_name => 'Other::Document::Class'
-          );
+  $rel_obj = $self->relationship($type => $field_name => 'Other::Document::Class');
+  $rel_obj = $self->relationship($field_name);
 
-This method is used to describe a relationship two documents.
+This method is used to describe a relationship between two documents.
 
-See L<Mandel::Relationship::HasMany> and L<Mandel::Relationship::HasOne>.
+See L<Mandel::Relationship::BelongsTo>, L<Mandel::Relationship::HasMany> or
+L<Mandel::Relationship::HasOne>.
 
 =cut
 
-sub add_relationship {
-  my($self, $type, $field, $other) = @_;
+sub relationship {
+  my $self = shift;
+
+  if(@_ == 1) {
+    return $self->{relationship}{$_[0]};
+  }
+
+  my($type, $field, $other, %args) = @_;
   my $class = 'Mandel::Relationship::' .Mojo::Util::camelize($type);
   my $e = $LOADER->load($class);
 
   confess $e if ref $e;
-  $class->create($self->document_class, $field, $other);
-  $self->{relationship}{$field} = $class; # TODO: The value can be redefined any time
-  $self;
+
+  $self->{relationship}{$field}
+    = $class->new(
+        accessor => $field,
+        document_class => $self->document_class,
+        related_class => $other,
+        %args,
+      );
 }
 
 =head2 new_collection
@@ -153,9 +164,12 @@ Returns a new instance of L</collection_class>.
 =cut
 
 sub new_collection {
-  $_[0]->collection_class->new({
-    connection => $_[1] || confess('$model->new_collection($connection)'),
-    model => $_[0],
+  my($self, $connection, %args) = @_;
+
+  $self->collection_class->new({
+    connection => $connection || confess('$model->new_collection($connection)'),
+    model => $self,
+    %args,
   });
 }
 

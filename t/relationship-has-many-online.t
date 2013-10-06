@@ -10,7 +10,7 @@ my $name = rand;
   my $cats;
 
   ok !$person->in_storage, 'person not in_storage';
-  $person->add_cat({ name => $name }, sub {
+  $person->add_cats({ name => $name }, sub {
     my($person, $err, $cat) = @_;
     ok !$err, 'no error';
     ok $cat->in_storage, 'cat in_storage';
@@ -21,7 +21,7 @@ my $name = rand;
 
   $cats = $person->search_cats({}, { limit => 10 });
   isa_ok $cats, 'Mandel::Collection';
-  is_deeply $cats->{query}, { _id_person => $person->id }, 'got correct cat query';
+  is_deeply $cats->{query}, { 'person.$id' => $person->id }, 'got correct cat query';
   is_deeply $cats->{extra}, { limit => 10 }, 'got correct cat extra';
 
   $cats->count(sub {
