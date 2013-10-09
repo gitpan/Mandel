@@ -30,6 +30,7 @@ t/lib/MyModel/Menu.pm
 t/mandel.t
 t/Online.pm
 t/relationship-belongs-to-online.t
+t/relationship-belongs-to.t
 t/relationship-has-many-online.t
 t/relationship-has-many.t
 t/relationship-has-one-online.t

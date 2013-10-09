@@ -4,6 +4,10 @@ package Mandel;
 
 Mandel - Async model layer for MongoDB objects using Mango
 
+=head1 VERSION
+
+0.08
+
 =head1 SYNOPSIS
 
   package MyModel;
@@ -93,7 +97,7 @@ use Mandel::Model;
 use Mango;
 use Carp 'confess';
 
-our $VERSION = '0.07';
+our $VERSION = '0.08';
 
 my $LOADER = Mojo::Loader->new;
 
@@ -243,11 +247,8 @@ sub model {
     $self->{model}{$name} = $model;
     return $self;
   }
-  elsif($model = $self->{model}{$name}) {
-    return $model;
-  }
   else {
-    return $self->class_for($name)->model;
+    return $self->{model}{$name} ||= $self->class_for($name)->model;
   }
 }
 
