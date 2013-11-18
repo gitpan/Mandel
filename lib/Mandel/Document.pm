@@ -383,7 +383,7 @@ sub import {
   }
 
   monkey_patch $caller, belongs_to => sub { $model->relationship(belongs_to => @_)->monkey_patch };
-  monkey_patch $caller, field => sub { $model->field(@_) };
+  monkey_patch $caller, field => sub { $model->field(shift, { @_ }) };
   monkey_patch $caller, has_many => sub { $model->relationship(has_many => @_)->monkey_patch };
   monkey_patch $caller, has_one => sub { $model->relationship(has_one => @_)->monkey_patch };
   monkey_patch $caller, model => sub { $model };
@@ -399,8 +399,6 @@ L<Mojolicious>, L<Mango>, L<Mandel>
 =head1 AUTHOR
 
 Jan Henning Thorsen - C<jhthorsen@cpan.org>
-
-Joel Berger, E<lt>joel.a.berger@gmail.comE<gt>
 
 =cut
 

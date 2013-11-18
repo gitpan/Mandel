@@ -5,6 +5,7 @@ lib/Mandel/Collection.pm
 lib/Mandel/Document.pm
 lib/Mandel/Iterator.pm
 lib/Mandel/Model.pm
+lib/Mandel/Model/Field.pm
 lib/Mandel/Relationship.pm
 lib/Mandel/Relationship/BelongsTo.pm
 lib/Mandel/Relationship/HasMany.pm

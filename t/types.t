@@ -6,6 +6,7 @@ field any => ( isa => Any );
 field int => ( isa => Int );
 field num => ( isa => Num );
 field str => ( isa => Str );
+field 'nonetype';
 
 package main;
 use Mojo::Base -strict;
@@ -29,4 +30,14 @@ $doc->int("42");
 like j($doc->data), qr{\:1\.23}, '1.23 is a number';
 like j($doc->data), qr{\:42}, '42 is a number';
 
+subtest 'types by model' => sub {
+  my @expected = ( 'Any', 'Int', 'Num', 'Str', undef );
+  my @fields = map { $_->name } $doc->model->fields;
+
+  is_deeply \@fields, [ 'any', 'int', 'num', 'str', 'nonetype' ], 'fields by model';
+
+  for(0..@fields-1) {
+    is $doc->model->field($fields[$_])->type_constraint, $expected[$_], "type $fields[$_]"
+  }
+};
 done_testing;
