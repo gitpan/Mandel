@@ -85,7 +85,13 @@ sub id {
 
 =head2 data
 
-Holds the raw mongodb document.
+Holds the raw mongodb document. It is possible to define default values for
+this attribute by defining a C<_build_data()> method in the sub class. Example:
+
+  sub _build_data {
+    my $self = shift;
+    return { age => 0, name => '' };
+  }
 
 =head2 in_storage
 
@@ -121,7 +127,9 @@ has _storage_collection => sub {
   $self->connection->_storage_collection($self->model->collection_name);
 };
 
-has data => sub { +{} }; # raw mongodb document data
+has data => sub { shift->_build_data }; # raw mongodb document data
+
+sub _build_data { +{} }
 
 =head1 METHODS
 

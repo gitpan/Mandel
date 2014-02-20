@@ -1,0 +1,32 @@
+#=====================
+[
+  {
+    _id => '12313112',
+    username => 'batman',
+    name => 'Bruce'
+    age => 32,
+  },
+  {
+    _id => '89213112',
+    username => 'marcus',
+    name => 'Marcus'
+    age => 25,
+  },
+]
+#=====================
+
+persons:i:name:jan = [ 89213112 ]       # set (meta: lowercase or case)
+persons:i:name:bruce = [ 12313112 ]     # set
+persons:i:username = [ marcus, batman ] # set (unique index)
+persons:i:_id = [ 12313112, 89213112 ]  # zset (unique index + order by insert date)
+
+persons:12313112:m:keys = [ _id, name, age ] # set
+persons:12313112:d:_id = 12313112
+persons:12313112:d:name = Bruce
+persons:12313112:d:age = 32
+
+persons:89213112:m:keys = [ _id, name, age ] # set
+persons:89213112:d:_id = 89213112
+persons:89213112:d:name = Marcus
+persons:89213112:d:age = 25
+
