@@ -13,6 +13,7 @@ lib/Mandel/Relationship/HasOne.pm
 local/indexes
 Makefile.PL
 MANIFEST			This list of files
+MANIFEST.bak
 MANIFEST.SKIP
 README
 README.pod
