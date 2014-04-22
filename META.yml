@@ -26,4 +26,4 @@ resources:
   homepage: https://metacpan.org/release/Mandel
   license: http://dev.perl.org/licenses/
   repository: https://github.com/jhthorsen/mandel
-version: 0.17
+version: 0.18

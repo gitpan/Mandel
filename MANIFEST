@@ -10,6 +10,7 @@ lib/Mandel/Relationship.pm
 lib/Mandel/Relationship/BelongsTo.pm
 lib/Mandel/Relationship/HasMany.pm
 lib/Mandel/Relationship/HasOne.pm
+lib/Mandel/Relationship/ListOf.pm
 Makefile.PL
 MANIFEST			This list of files
 MANIFEST.SKIP
@@ -35,6 +36,7 @@ t/relationship-has-many-online.t
 t/relationship-has-many.t
 t/relationship-has-one-online.t
 t/relationship-has-one.t
+t/relationship-list-of-online.t
 t/synopsis.t
 t/types.t
 META.yml                                 Module YAML meta-data (added by MakeMaker)

@@ -6,7 +6,7 @@ Mandel - Async model layer for MongoDB objects using Mango
 
 =head1 VERSION
 
-0.17
+0.18
 
 =head1 SYNOPSIS
 
@@ -104,7 +104,7 @@ use Mandel::Model;
 use Mango;
 use Carp 'confess';
 
-our $VERSION = '0.17';
+our $VERSION = '0.18';
 
 my $LOADER = Mojo::Loader->new;
 
@@ -309,6 +309,10 @@ sub _storage_collection {
 =head1 SEE ALSO
 
 L<Mojolicious>, L<Mango>
+
+Still got MongoDB 2.4 on Ubuntu? Check out
+L<http://docs.mongodb.org/manual/tutorial/install-mongodb-on-ubuntu/>
+to upgrade.
 
 =head1 SOURCE REPOSITORY
 
