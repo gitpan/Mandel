@@ -6,7 +6,7 @@ Mandel - Async model layer for MongoDB objects using Mango
 
 =head1 VERSION
 
-0.19
+0.20
 
 =head1 SYNOPSIS
 
@@ -19,7 +19,7 @@ Mandel - Async model layer for MongoDB objects using Mango
   package MyModel::Cat;
   use Mandel::Document;
   use Types::Standard 'Str';
-  field name => ( isa => Str );
+  field name => ( isa => Str, builder => sub { "value" } );
   field 'type';
   belongs_to person => 'MyModel::Person';
   1;
@@ -104,7 +104,7 @@ use Mandel::Model;
 use Mango;
 use Carp 'confess';
 
-our $VERSION = '0.19';
+our $VERSION = '0.20';
 
 my $LOADER = Mojo::Loader->new;
 
