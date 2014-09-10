@@ -18,9 +18,11 @@ no_index:
     - t
     - inc
 requires:
-  perl: 0
+  Mango: 1.10
+  Mojolicious: 5.30
+  Type::Tiny: 1.00
 resources:
   bugtracker: https://github.com/jhthorsen/mandel/issues
   homepage: https://github.com/jhthorsen/mandel
   repository: https://github.com/jhthorsen/mandel.git
-version: 0.21
+version: 0.22
