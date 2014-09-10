@@ -1,4 +1,7 @@
+.ship.conf
+.travis.yml
 Changes
+cpanfile
 lib/andel.pm
 lib/Mandel.pm
 lib/Mandel/Collection.pm
@@ -13,7 +16,6 @@ lib/Mandel/Relationship/HasOne.pm
 lib/Mandel/Relationship/ListOf.pm
 Makefile.PL
 MANIFEST			This list of files
-MANIFEST.SKIP
 README
 t/00-basic.t
 t/anon.t
