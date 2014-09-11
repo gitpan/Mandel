@@ -20,6 +20,8 @@ MANIFEST			This list of files
 README
 t/00-basic.t
 t/anon.t
+t/belongs-to-blocking.t
+t/belongs-to-non-blocking.t
 t/collection-online.t
 t/collection.t
 t/custom-document-class.t
@@ -27,19 +29,21 @@ t/document-id.t
 t/document-json-pointer.t
 t/document.t
 t/field.t
+t/has-many-blocking.t
+t/has-many-non-blocking.t
+t/has-one-blocking.t
+t/has-one-non-blocking.t
 t/iterator.t
 t/lib/MyModel.pm
 t/lib/MyModel/Menu.pm
+t/list-of-blocking.t
+t/list-of-non-blocking.t
 t/mandel.t
 t/no-warning.t
 t/Online.pm
-t/relationship-belongs-to-online.t
 t/relationship-belongs-to.t
-t/relationship-has-many-online.t
 t/relationship-has-many.t
-t/relationship-has-one-online.t
 t/relationship-has-one.t
-t/relationship-list-of-online.t
 t/synopsis.t
 t/types.t
 META.yml                                 Module YAML meta-data (added by MakeMaker)
